@@ -6,20 +6,20 @@ Instructions: implement all of the pending specs (the `it` statements without bl
 =end
 
 describe Dessert do
-  let(:chef) { double("chef", :name => "Jonathan") }
-  subject(:dessert) { Dessert.new("cake", 35, "Jonathan") }
+  let(:chef) { double("chef", :name => "jonathan") }
+  subject(:cake) { Dessert.new("cake", 35, chef) }
 
   describe "#initialize" do
     it "sets a type" do
-      allow(dessert).to receive(:type).and_return("cake")
+      expect(cake.type).to eq("cake")
     end
 
     it "sets a quantity" do
-      allow(dessert).to receive(:cake).and_return(35)
+      expect(cake.quantity).to eq(35)
     end
 
     it "starts ingredients as an empty array" do
-      expect(dessert.ingredients).to eq([])
+      expect(cake.ingredients).to be_empty
     end
 
     it "raises an argument error when given a non-integer quantity" do
@@ -29,38 +29,46 @@ describe Dessert do
 
   describe "#add_ingredient" do
     it "adds an ingredient to the ingredients array" do
-      dessert.add_ingredient("rainbows")
-      expect(dessert.ingredients).to include("rainbows")
+      cake.add_ingredient("rainbows")
+      expect(cake.ingredients).to include("rainbows")
     end
   end
 
   describe "#mix!" do
     it "shuffles the ingredient array" do
-      pre_shuffle = dessert.ingredients
-      # dessert.mix!
-      expect(dessert.ingredients).not_to eq(pre_shuffle)
+      ingredients = ["nima", "yujie", "woody"]
+
+      ingredients.each do |ingredient|
+        cake.add_ingredient(ingredient)
+      end
+
+      expect(cake.ingredients).to eq(ingredients)
+      cake.mix!
+      expect(cake.ingredients).not_to eq(ingredients)
+      expect(cake.ingredients.sort).to eq(ingredients.sort)
     end
   end
 
   describe "#eat" do
     it "subtracts an amount from the quantity" do
-      expect(dessert.eat(5)).to eq(30)
+      expect(cake.eat(5)).to eq(30)
     end
 
     it "raises an error if the amount is greater than the quantity" do
-      expect{ dessert.eat(50) }.to raise_error("not enough left!")
+      expect{ cake.eat(50) }.to raise_error("not enough left!")
     end
   end
 
   describe "#serve" do
     it "contains the titleized version of the chef's name" do
-      expect(dessert.serve).to include("Jonathan")
+      allow(chef).to receive(:titleize)
     end
   end
 
   describe "#make_more" do
     it "calls bake on the dessert's chef with the dessert passed in" do
-      expect(dessert.make_more).to yield_with_args("cake")
+      expect(chef).to receive(:bake).with(cake)
+      cake.make_more
     end
   end
 end
