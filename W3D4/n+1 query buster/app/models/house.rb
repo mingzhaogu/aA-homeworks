@@ -19,6 +19,13 @@ class House < ApplicationRecord
   end
 
   def better_seeds_query
-    # TODO: your code here
+    plants = self.plants.includes(:seeds)
+
+    plants_seeds = []
+    plants.each do |plant|
+      plants_seeds << plant.seeds
+    end
+
+    plants_seeds
   end
 end
