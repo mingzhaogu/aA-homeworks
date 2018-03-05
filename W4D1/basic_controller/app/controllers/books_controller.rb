@@ -1,18 +1,26 @@
 class BooksController < ApplicationController
   def index
-    render index: Books.all
+    @books = Book.all
   end
 
   def new
-    # your code here
+    render '/books/new.html.erb'
   end
 
   def create
-    # your code here
+    new_book = Book.new(book_params)
+    if new_book.save!
+      redirect_to '/books'
+    else
+      render :new
+    end
   end
 
   def destroy
-    # your code here
+    book = Book.find_by(id: params[:id])
+    book.destroy
+
+    redirect_to '/books'
   end
 
   private
