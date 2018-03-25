@@ -26,6 +26,11 @@ class Widget extends React.Component {
         // be dispatched
         this.props.store.dispatch(
           this.selectCurrency(resp.base, resp.rates)
+          // {
+          //   type: 'SWITCH_CURRENCY',
+          //   baseCurrency,
+          //   rates,
+          // }
         );
       }.bind(this)
     });
